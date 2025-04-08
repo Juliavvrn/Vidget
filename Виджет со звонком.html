@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Анимированный виджет</title>
+<style>
+  body {
+    background-color: #0a0a0a; /* Почти черный фон */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  /* Контейнер виджета */
+  .widget-container {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Анимация плавания */
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* Анимация моргания глаз */
+  @keyframes blink {
+    0%, 44%, 48%, 100% { transform: scaleY(1); }
+    46% { transform: scaleY(0.1); }
+  }
+
+  /* Анимация вращения */
+  @keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Анимация плавного изменения формы */
+  @keyframes morphShape {
+    0% { border-radius: 50% 50% 50% 50%; transform: scale(1); }
+    25% { border-radius: 45% 55% 50% 50%; transform: scale(1.02); }
+    50% { border-radius: 50% 45% 55% 50%; transform: scale(0.98); }
+    75% { border-radius: 55% 50% 45% 55%; transform: scale(1.01); }
+    100% { border-radius: 50% 50% 50% 50%; transform: scale(1); }
+  }
+
+  /* Анимация текучести */
+  @keyframes flow {
+    0% { transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(90deg) scale(1.05); }
+    50% { transform: rotate(180deg) scale(1); }
+    75% { transform: rotate(270deg) scale(0.95); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+
+  /* Анимация пульсации свечения */
+  @keyframes pulse {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50% { opacity: 1.2; transform: scale(1.2); }
+  }
+
+  /* Основной виджет - полностью прозрачный */
+  .widget {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: transparent;
+    animation: float 4s ease-in-out infinite;
+    z-index: 10;
+  }
+
+  /* Основная сфера */
+  .sphere {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.7); /* Черный с высокой непрозрачностью */
+    border: 1px solid rgba(200, 200, 200, 0.6); /* Темно-серая граница */
+    box-shadow: 
+      0 0 10px 2px rgba(170, 170, 170, 0.7),
+      0 0 20px 5px rgba(100, 100, 100, 0.5);
+    animation: morphShape 8s ease-in-out infinite;
+  }
+
+  /* Внутренние линии */
+  .inner-lines {
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    top: 5%;
+    left: 5%;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .line {
+    position: absolute;
+    background: rgba(100, 100, 100, 0.3); /* Темно-серый */
+    border-radius: 50%;
+  }
+
+  .line-1 {
+    width: 80%;
+    height: 80%;
+    top: 10%;
+    left: 10%;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    animation: flow 20s linear infinite;
+  }
+
+  .line-2 {
+    width: 60%;
+    height: 60%;
+    top: 20%;
+    left: 20%;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    animation: flow 15s linear infinite reverse;
+  }
+
+  /* Текучие элементы */
+  .fluid-element {
+    position: absolute;
+    background: rgba(120, 120, 120, 0.2);
+    filter: blur(5px);
+    border-radius: 50%;
+  }
+
+  .fluid-1 {
+    width: 40%;
+    height: 40%;
+    top: 10%;
+    left: 10%;
+    animation: flow 12s ease-in-out infinite;
+    opacity: 0.7;
+  }
+
+  .fluid-2 {
+    width: 30%;
+    height: 30%;
+    bottom: 10%;
+    right: 10%;
+    animation: flow 10s ease-in-out infinite reverse;
+    opacity: 0.5;
+  }
+
+  .fluid-3 {
+    width: 20%;
+    height: 20%;
+    top: 40%;
+    right: 15%;
+    animation: flow 8s ease-in-out infinite;
+    opacity: 0.6;
+  }
+
+  /* Внешний контур */
+  .outer-contour {
+    position: absolute;
+    width: 115%;
+    height: 115%;
+    top: -7.5%;
+    left: -7.5%;
+    border-radius: 50%;
+    border: 1px solid rgba(40, 40, 40, 0.5); /* Темно-серая граница */
+    animation: morphShape 10s ease-in-out infinite reverse;
+  }
+
+  /* Эффект свечения */
+  .glow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at center,
+      rgba(60, 60, 60, 0.6) 0%,
+      rgba(50, 50, 50, 0.5) 10%,
+      rgba(40, 40, 40, 0.4) 20%,
+	  rgba(30, 30, 30, 0.3) 30%,
+      rgba(20, 20, 20, 0.2) 40%,
+      rgba(10, 10, 10, 0.1) 60%,
+      transparent 80%
+    );
+    filter: blur(8px);
+    animation: morphShape 12s ease-in-out infinite;
+  }
+
+  /* Новое внешнее свечение */
+  .outer-glow {
+    position: absolute;
+    width: 140%;
+    height: 140%;
+    top: -20%;
+    left: -20%;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at center,
+      rgba(60, 60, 60, 0.6) 0%,
+      rgba(50, 50, 50, 0.5) 10%,
+      rgba(40, 40, 40, 0.4) 20%,
+	  rgba(30, 30, 30, 0.3) 30%,
+      rgba(20, 20, 20, 0.2) 40%,
+      rgba(10, 10, 10, 0.1) 60%,
+      transparent 70%
+    );
+    filter: blur(15px);
+    animation: pulse 8s ease-in-out infinite;
+    z-index: 1;
+  }
+
+  /* Дополнительное свечение для усиления эффекта */
+  .accent-glow {
+    position: absolute;
+    width: 120%;
+    height: 120%;
+    top: -10%;
+    left: -10%;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at center,
+      rgba(60, 60, 60, 0.6) 0%,
+      rgba(50, 50, 50, 0.5) 10%,
+      rgba(40, 40, 40, 0.4) 20%,
+	  rgba(30, 30, 30, 0.3) 30%,
+      rgba(20, 20, 20, 0.2) 40%,
+      rgba(10, 10, 10, 0.1) 60%,
+      transparent 80%
+    );
+    filter: blur(10px);
+    animation: pulse 6s ease-in-out infinite reverse;
+    z-index: 2;
+  }
+
+  /* Глаза */
+  .eyes {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+  }
+  
+  .eye {
+    position: relative;
+    width: 15px;
+    height: 20px;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 50%;
+    animation: blink 4s infinite;
+    box-shadow: 0 0 12px rgba(240, 240, 240, 0.9); /* Светло-серое свечение */
+    margin: 0 15px;
+    overflow: hidden;
+  }
+
+  /* Зрачок (невидимый, но используется для отслеживания) */
+  .pupil {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+  }
+</style>
+</head>
+<body>
+<div class="widget-container">
+  <div class="outer-glow"></div>
+  <div class="accent-glow"></div>
+  <div class="outer-contour"></div>
+  <div class="glow"></div>
+  <div class="sphere">
+    <div class="inner-lines">
+      <div class="line line-1"></div>
+      <div class="line line-2"></div>
+    </div>
+    <div class="fluid-element fluid-1"></div>
+    <div class="fluid-element fluid-2"></div>
+    <div class="fluid-element fluid-3"></div>
+  </div>
+  <div class="widget">
+    <div class="eyes">
+      <div class="eye">
+        <div class="pupil" id="left-pupil"></div>
+      </div>
+      <div class="eye">
+        <div class="pupil" id="right-pupil"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Получаем элементы
+  const widget = document.querySelector('.widget');
+  const leftEye = document.querySelector('.eye:first-child');
+  const rightEye = document.querySelector('.eye:last-child');
+  const leftPupil = document.getElementById('left-pupil');
+  const rightPupil = document.getElementById('right-pupil');
+  
+  // Получаем позицию виджета
+  function getWidgetPosition() {
+    const rect = widget.getBoundingClientRect();
+    return {
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2
+    };
+  }
+  
+  // Функция для расчета расстояния между двумя точками
+  function getDistance(x1, y1, x2, y2) {
+    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+  }
+  
+  // Функция для обновления положения глаз
+  function updateEyes(mouseX, mouseY) {
+    const widgetPos = getWidgetPosition();
+    const distance = getDistance(mouseX, mouseY, widgetPos.x, widgetPos.y);
+    
+    // Максимальное расстояние, на котором глаза начинают следить за курсором
+    const maxDistance = 300;
+    
+    // Если курсор достаточно близко
+    if (distance < maxDistance) {
+      // Рассчитываем интенсивность слежения (чем ближе, тем сильнее)
+      const intensity = 1 - Math.min(1, distance / maxDistance);
+      
+      // Рассчитываем смещение для каждого глаза
+      const leftEyeRect = leftEye.getBoundingClientRect();
+      const rightEyeRect = rightEye.getBoundingClientRect();
+      
+      // Максимальное смещение глаза
+      const maxEyeMove = 4;
+      
+      // Рассчитываем углы от глаз к курсору
+      const leftDx = mouseX - (leftEyeRect.left + leftEyeRect.width / 2);
+      const leftDy = mouseY - (leftEyeRect.top + leftEyeRect.height / 2);
+      const leftAngle = Math.atan2(leftDy, leftDx);
+      
+      const rightDx = mouseX - (rightEyeRect.left + rightEyeRect.width / 2);
+      const rightDy = mouseY - (rightEyeRect.top + rightEyeRect.height / 2);
+      const rightAngle = Math.atan2(rightDy, rightDx);
+      
+      // Применяем смещение с учетом интенсивности
+      const leftMoveX = Math.cos(leftAngle) * maxEyeMove * intensity;
+      const leftMoveY = Math.sin(leftAngle) * maxEyeMove * intensity;
+      
+      const rightMoveX = Math.cos(rightAngle) * maxEyeMove * intensity;
+      const rightMoveY = Math.sin(rightAngle) * maxEyeMove * intensity;
+      
+      // Обновляем положение глаз
+      leftEye.style.transform = `translate(${leftMoveX}px, ${leftMoveY}px)`;
+      rightEye.style.transform = `translate(${rightMoveX}px, ${rightMoveY}px)`;
+    } else {
+      // Если курсор далеко, глаза смотрят вперед
+      leftEye.style.transform = 'translate(0, 0)';
+      rightEye.style.transform = 'translate(0, 0)';
+    }
+  }
+  
+  // Обработчик движения мыши
+  document.addEventListener('mousemove', (e) => {
+    updateEyes(e.clientX, e.clientY);
+  });
+  
+  // Инициализация - глаза смотрят вперед
+  updateEyes(-1000, -1000);
+</script>
+
+<script src="https://retellai.com/agent-sdk/sdk.umd.js"></script>
+<script>
+  const agentId = "agent_fa05ae787d5ea46633daf77507";
+  const apiKey = "key_b0846ab07371dd771127b27d2408";
+  const autocall = new URLSearchParams(window.location.search).get("autocall");
+
+  const startCall = () => {
+    if (window.Retell && typeof Retell.startCall === "function") {
+      Retell.startCall({
+        apiKey,
+        agentId
+      });
+    } else {
+      console.error("Retell SDK не загружен");
+    }
+  };
+
+  document.querySelector(".widget-container")?.addEventListener("click", startCall);
+
+  if (autocall === "1") {
+    setTimeout(startCall, 1000);
+  }
+</script>
+
+</body>
+</html>
+
